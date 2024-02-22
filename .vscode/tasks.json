@@ -1,0 +1,38 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "cppbuild",
+			"label": "build",
+			"command": "/usr/bin/clang++",
+			"args": [
+				"-fcolor-diagnostics",
+				"-fansi-escape-codes",
+				"-g",
+				"-lpthread",
+				"${workspaceFolder}/src/main.cpp",
+				"-std=c++11",
+				"-o",
+				"${workspaceFolder}/bin/main"
+			],
+			"options": {
+				"cwd": "${fileDirname}"
+			},
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"detail": "compiler: /usr/bin/clang++",
+			"dependsOn": "clean"
+		},
+		{
+			"label": "clean",
+			"type": "shell",
+			"command": "rm -rf ${workspaceFolder}/bin/*",
+			"problemMatcher": []
+		}
+	]
+}
