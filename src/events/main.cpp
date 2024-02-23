@@ -1,48 +1,15 @@
 #include <iostream>
+#include <thread>
 
 #include "event.h"
 #include "wifi.h"
 #include "guardian.h"
-#include "concurrent_queue.h"
 
 using std::string;
 
 int main(int argc, char *argv[])
 {
-    TKS::ConcurrentQueue<string> queue;
-
-    std::thread writeThread = std::thread([&queue]() {
-        std::cout << "Writing thread ID ";
-        std::cout << std::this_thread::get_id() << std::endl;
-
-        for (int i = 0; i < 10; i++) {
-            queue.push(std::to_string(i + 1));
-        }
-    });
-
-    std::thread readThread = std::thread([&queue]() {
-        std::cout << "Reading thread ID ";
-        std::cout << std::this_thread::get_id() << std::endl;
-
-        while (!queue.empty()) {
-            std::cout << queue.pop() << " ";
-        }
-
-        std::cout << std::endl;
-    });
-
-    if (writeThread.joinable())
-        writeThread.join();
-
-    if (readThread.joinable())
-        readThread.join();
-
-    return 0;
-}
-
-int test()
-{
-    // std::cout << "Type <q> to stop" << std::endl;
+    std::cout << "Type <q> to stop" << std::endl;
 
     Arduino::Wifi _wifi{};
     Arduino::Wifi *p_wifi{&_wifi};
