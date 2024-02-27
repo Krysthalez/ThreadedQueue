@@ -1,13 +1,20 @@
+#include "event.h"
+#include "guardian.h"
+#include "wifi.h"
+#include "concurrent_queue.h"
+
 #include <iostream>
 #include <thread>
 
-#include "event.h"
-#include "wifi.h"
-#include "guardian.h"
-
 using std::string;
 
-int main(int argc, char *argv[])
+int main()
+{
+    //
+    return EXIT_SUCCESS;
+}
+
+int events()
 {
     std::cout << "Type <q> to stop" << std::endl;
 
@@ -67,6 +74,53 @@ int main(int argc, char *argv[])
     p_wifi = nullptr;
 
     std::cout << "Exiting" << std::endl;
+
+    return 0;
+}
+
+int concurrency()
+{
+    TKS::ConcurrentQueue<string> queue;
+    std::thread writeThread;
+    std::thread readThread;
+
+    writeThread = std::thread(
+        [&queue]()
+        {
+            std::cout << "Writing thread ID ";
+            std::cout << std::this_thread::get_id() << std::endl;
+            std::cout << ">>> ";
+
+            for (int i = 1; i <= 20; i++)
+            {
+                string x = std::to_string(i);
+                std::cout << x << " ";
+                queue.push(x);
+            }
+
+            std::cout << std::endl;
+        });
+
+    readThread = std::thread(
+        [&queue]()
+        {
+            std::cout << "Reading thread ID ";
+            std::cout << std::this_thread::get_id() << std::endl;
+            std::cout << "<<< ";
+
+            while (!queue.empty())
+            {
+                std::cout << queue.pop() << " ";
+            }
+
+            std::cout << std::endl;
+        });
+
+    if (writeThread.joinable())
+        writeThread.join();
+
+    if (readThread.joinable())
+        readThread.join();
 
     return 0;
 }
